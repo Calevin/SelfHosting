@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  caddy:
+    image: lucaslorentz/caddy-docker-proxy:ci-alpine
+    container_name: caddy_reverse_proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      - CADDY_INGRESS_NETWORKS=caddy_net
+      - TZ=America/Argentina/Buenos_Aires
+    networks:
+      - caddy_net
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - caddy_data:/data
+
+  whoami_test:
+    image: traefik/whoami
+    container_name: whoami_test_container
+    restart: unless-stopped
+    networks:
+      - caddy_net
+    labels:
+      caddy: http://debug-tunnel.example.com
+      caddy.reverse_proxy: "whoami_test_container:80"
+      caddy.reverse_proxy.header_up: "X-Forwarded-Proto https"
+
+networks:
+  caddy_net:
+    external: true
+
+volumes:
+  caddy_data: {}
