@@ -1,0 +1,6 @@
+APP_KEY=base64:abcdefghijklmnopqrst=
+TZ=America/Argentina/Buenos_Aires
+BOOKSTACK_DB_USER=user
+BOOKSTACK_DB_PASS=pass
+BOOKSTACK_DB_NAME=database
+MYSQL_ROOT_PASSWORD=root_pass

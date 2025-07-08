@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  bookstack:
+    image: lscr.io/linuxserver/bookstack
+    container_name: bookstack_app
+    environment:
+      - APP_URL=http://bookstack.example.com
+      - APP_KEY=${APP_KEY}
+      - DB_HOST=bookstack_db
+      - DB_PORT=3306
+      - DB_USERNAME=${BOOKSTACK_DB_USER}
+      - DB_PASSWORD=${BOOKSTACK_DB_PASS}
+      - DB_DATABASE=${BOOKSTACK_DB_NAME}
+      - TZ=${TZ}
+    volumes:
+      - bookstack_app_data:/config
+    restart: unless-stopped
+    depends_on:
+      - bookstack_db
+    networks:
+       - bookstack_net
+       - caddy_net
+    labels:
+      caddy: http://bookstack.example.com
+      caddy.reverse_proxy: "bookstack:80"
+      caddy.reverse_proxy.header_up: "X-Forwarded-Proto https"
+
+  bookstack_db:
+    image: lscr.io/linuxserver/mariadb
+    container_name: bookstack_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - TZ=${TZ}
+      - MYSQL_DATABASE=${BOOKSTACK_DB_NAME}
+      - MYSQL_USER=${BOOKSTACK_DB_USER}
+      - MYSQL_PASSWORD=${BOOKSTACK_DB_PASS}
+    volumes:
+      - bookstack_db_data:/var/lib/mysql
+    restart: unless-stopped
+    networks:
+       - bookstack_net
+
+volumes:
+  bookstack_db_data: {}
+  bookstack_app_data: {}
+  
+networks:
+  bookstack_net:
+  caddy_net:
+    external: true
