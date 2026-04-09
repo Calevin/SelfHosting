@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  syncthing:
+    image: lscr.io/linuxserver/syncthing:latest
+    container_name: syncthing_app
+    hostname: syncthing-server
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Argentina/Buenos_Aires
+    volumes:
+      # Volumen para la configuración de Syncthing
+      - syncthing_config:/config
+      # Volumen para los datos que a sincronizar.
+      - /home/example/sincronizada:/sync/data
+    networks:
+      - caddy_net
+    labels:
+      caddy: http://syncthing.example.com
+      caddy.reverse_proxy: "syncthing_app:8384"
+      caddy.reverse_proxy.header_up: "X-Forwarded-Proto https"
+
+volumes:
+  syncthing_config: {}
+
+networks:
+  caddy_net:
+    external: true
