@@ -1,0 +1,4 @@
+TZ=America/Argentina/Buenos_Aires
+KAVITA_APP_URL=http://kavita.example.com
+PUID=1000
+PGID=1000

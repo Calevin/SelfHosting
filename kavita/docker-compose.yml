@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  kavita:
+    image: jvmorgan/kavita:latest
+    container_name: kavita_app
+    env_file:
+      - _env
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    volumes:
+      - kavita_config:/kavita/config
+      - /path/to/manga:/manga
+      - /path/to/comics:/comics
+      - /path/to/books:/books
+    restart: unless-stopped
+    networks:
+      - kavita_net
+      - caddy_net
+    labels:
+      caddy: ${KAVITA_APP_URL}
+      caddy.reverse_proxy: "kavita_app:5000"
+      caddy.reverse_proxy.header_up: "X-Forwarded-Proto https"
+
+volumes:
+  kavita_config: {}
+
+networks:
+  kavita_net:
+  caddy_net:
+    external: true
