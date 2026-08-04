@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: joplin_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      TZ: ${TZ}
+    volumes:
+      - joplin_db_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - joplin_net
+
+  app:
+    image: joplin/server:latest
+    container_name: joplin_app
+    depends_on:
+      - db
+    env_file:
+      - _env
+    environment:
+      APP_BASE_URL: ${APP_BASE_URL}
+      APP_PORT: ${APP_PORT}
+      DB_CLIENT: pg
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_DATABASE: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    restart: unless-stopped
+    networks:
+      - joplin_net
+      - caddy_net
+    labels:
+      caddy: ${APP_BASE_URL}
+      caddy.reverse_proxy: "joplin_app:22300"
+      caddy.reverse_proxy.header_up: "X-Forwarded-Proto https"
+
+volumes:
+  joplin_db_data: {}
+
+networks:
+  joplin_net:
+  caddy_net:
+    external: true

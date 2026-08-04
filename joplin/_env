@@ -1,0 +1,9 @@
+POSTGRES_USER=joplin
+POSTGRES_PASSWORD=joplin_db_password_change_me
+POSTGRES_DB=joplin
+
+# URL pública o dominio configurado para Joplin Server
+APP_BASE_URL=http://joplin.example.com
+APP_PORT=22300
+
+TZ=America/Argentina/Buenos_Aires
