@@ -1,4 +1,4 @@
 PUID=1000
 PGID=1000
 TZ=America/Argentina/Buenos_Aires
-HEIMDALL_APP_URL=heimdall.example.com
+HEIMDALL_APP_URL=http://heimdall.example.com
