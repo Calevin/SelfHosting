@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   kavita:
-    image: jvmorgan/kavita:latest
+    image: lscr.io/linuxserver/kavita:latest
     container_name: kavita_app
     env_file:
       - _env
