@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  heimdall:
+    image: lscr.io/linuxserver/heimdall:latest
+    container_name: heimdall_app
+    env_file:
+      - _env
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - heimdall_config:/config
+    restart: unless-stopped
+    networks:
+      - heimdall_net
+      - caddy_net
+    labels:
+      caddy: ${HEIMDALL_APP_URL}
+      caddy.reverse_proxy: "heimdall_app:80"
+      caddy.reverse_proxy.header_up: "X-Forwarded-Proto https"
+
+volumes:
+  heimdall_config: {}
+
+networks:
+  heimdall_net:
+  caddy_net:
+    external: true
