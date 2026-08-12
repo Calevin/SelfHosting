@@ -1,0 +1,4 @@
+READECK_APP_URL=https://readeck.example.com
+READECK_SERVER_PREFIX=
+READECK_LOG_LEVEL=info
+TZ=America/Argentina/Buenos_Aires

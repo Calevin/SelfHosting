@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  readeck:
+    image: codeberg.org/readeck/readeck:latest
+    container_name: readeck_app
+    env_file:
+      - _env
+    environment:
+      - READECK_LOG_LEVEL=${READECK_LOG_LEVEL}
+      - READECK_SERVER_PREFIX=${READECK_SERVER_PREFIX}
+      - TZ=${TZ}
+    volumes:
+      - readeck_data:/readeck
+    restart: unless-stopped
+    networks:
+      - readeck_net
+      - caddy_net
+    labels:
+      caddy: ${READECK_APP_URL}
+      caddy.reverse_proxy: "readeck_app:8000"
+      caddy.reverse_proxy.header_up: "X-Forwarded-Proto https"
+
+volumes:
+  readeck_data: {}
+
+networks:
+  readeck_net:
+  caddy_net:
+    external: true
