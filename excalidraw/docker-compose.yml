@@ -40,11 +40,8 @@ services:
       - caddy_net
     labels:
       caddy: ${EXCALIDASH_APP_URL}
-      caddy.route_0: "/api/*"
-      caddy.route_0.reverse_proxy: "excalidash_backend:8000"
-      caddy.route_1: "/socket.io/*"
-      caddy.route_1.reverse_proxy: "excalidash_backend:8000"
-      caddy.reverse_proxy: "excalidash_frontend:80"
+      caddy.reverse_proxy: "{{upstreams 80}}"
+      caddy.reverse_proxy.header_up: "X-Forwarded-Proto https"
 
 volumes:
   excalidash_data: {}
