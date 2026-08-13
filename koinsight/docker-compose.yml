@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   koinsight:
-    image: ghcr.io/bbrx/koinsight:latest
+    image: ghcr.io/ko-insight/koinsight:latest
     container_name: koinsight_app
     env_file:
       - _env
