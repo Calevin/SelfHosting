@@ -1,5 +1,5 @@
 # URL pública configurada para FreshRSS
-FRESHRSS_APP_URL=freshrss.example.com
+FRESHRSS_APP_URL=http://freshrss.example.com
 
 # Timezone y permisos
 TZ=America/Argentina/Buenos_Aires
