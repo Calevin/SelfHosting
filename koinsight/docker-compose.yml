@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  koinsight:
+    image: ghcr.io/bbrx/koinsight:latest
+    container_name: koinsight_app
+    env_file:
+      - _env
+    environment:
+      - TZ=${TZ}
+      - PORT=${PORT}
+    volumes:
+      - koinsight_data:/app/data
+    restart: unless-stopped
+    networks:
+      - koinsight_net
+      - caddy_net
+    labels:
+      caddy: ${KOINSIGHT_APP_URL}
+      caddy.reverse_proxy: "koinsight_app:3000"
+      caddy.reverse_proxy.header_up: "X-Forwarded-Proto https"
+
+volumes:
+  koinsight_data: {}
+
+networks:
+  koinsight_net:
+  caddy_net:
+    external: true
