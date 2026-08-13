@@ -1,19 +1,48 @@
 version: '3.8'
 
 services:
-  excalidraw:
-    image: excalidraw/excalidraw:latest
-    container_name: excalidraw_app
+  backend:
+    image: zimengxiong/excalidash-backend:latest
+    container_name: excalidash_backend
     env_file:
       - _env
+    environment:
+      - DATABASE_PROVIDER=sqlite
+      - DATABASE_URL=file:/app/prisma/dev.db
+      - PORT=8000
+      - NODE_ENV=production
+      - AUTH_MODE=${AUTH_MODE:-local}
+      - TRUST_PROXY=true
+      - FRONTEND_URL=${EXCALIDASH_APP_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - CSRF_SECRET=${CSRF_SECRET}
+      - TZ=${TZ}
+    volumes:
+      - excalidash_data:/app/prisma
+    restart: unless-stopped
+    networks:
+      - excalidraw_net
+
+  frontend:
+    image: zimengxiong/excalidash-frontend:latest
+    container_name: excalidash_frontend
+    env_file:
+      - _env
+    environment:
+      - BACKEND_URL=http://excalidash_backend:8000
+      - TZ=${TZ}
+    depends_on:
+      - backend
     restart: unless-stopped
     networks:
       - excalidraw_net
       - caddy_net
     labels:
-      caddy: ${EXCALIDRAW_APP_URL}
-      caddy.reverse_proxy: "excalidraw_app:80"
-      caddy.reverse_proxy.header_up: "X-Forwarded-Proto https"
+      caddy: ${EXCALIDASH_APP_URL}
+      caddy.reverse_proxy: "excalidash_frontend:6767"
+
+volumes:
+  excalidash_data: {}
 
 networks:
   excalidraw_net:

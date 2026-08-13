@@ -1,2 +1,4 @@
-EXCALIDRAW_APP_URL=excalidraw.example.com
+EXCALIDASH_APP_URL=http://excalidraw.calevin.com
 TZ=America/Argentina/Buenos_Aires
+JWT_SECRET=excalidash_jwt_secret_change_me_super_secret_key_12345
+CSRF_SECRET=excalidash_csrf_secret_change_me_super_secret_key_12345
