@@ -13,7 +13,8 @@ services:
       - NODE_ENV=production
       - AUTH_MODE=${AUTH_MODE:-local}
       - TRUST_PROXY=true
-      - FRONTEND_URL=${EXCALIDASH_APP_URL}
+      - FRONTEND_URL=https://excalidraw.example.com
+      - CSRF_TRUSTED_ORIGINS=https://excalidraw.example.com
       - JWT_SECRET=${JWT_SECRET}
       - CSRF_SECRET=${CSRF_SECRET}
       - TZ=${TZ}
@@ -30,7 +31,7 @@ services:
     env_file:
       - _env
     environment:
-      - BACKEND_URL=http://excalidash_backend:8000
+      - BACKEND_URL=excalidash_backend:8000
       - TZ=${TZ}
     depends_on:
       - backend
