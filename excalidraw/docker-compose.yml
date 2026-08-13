@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  excalidraw:
+    image: excalidraw/excalidraw:latest
+    container_name: excalidraw_app
+    env_file:
+      - _env
+    restart: unless-stopped
+    networks:
+      - excalidraw_net
+      - caddy_net
+    labels:
+      caddy: ${EXCALIDRAW_APP_URL}
+      caddy.reverse_proxy: "excalidraw_app:80"
+      caddy.reverse_proxy.header_up: "X-Forwarded-Proto https"
+
+networks:
+  excalidraw_net:
+  caddy_net:
+    external: true
