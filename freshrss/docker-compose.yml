@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: freshrss_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      TZ: ${TZ}
+    volumes:
+      - freshrss_db_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - freshrss_net
+
+  app:
+    image: lscr.io/linuxserver/freshrss:latest
+    container_name: freshrss_app
+    depends_on:
+      - db
+    env_file:
+      - _env
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - freshrss_config:/config
+    restart: unless-stopped
+    networks:
+      - freshrss_net
+      - caddy_net
+    labels:
+      caddy: ${FRESHRSS_APP_URL}
+      caddy.reverse_proxy: "freshrss_app:80"
+      caddy.reverse_proxy.header_up: "X-Forwarded-Proto https"
+
+volumes:
+  freshrss_db_data: {}
+  freshrss_config: {}
+
+networks:
+  freshrss_net:
+  caddy_net:
+    external: true

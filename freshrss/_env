@@ -1,0 +1,12 @@
+# URL pública configurada para FreshRSS
+FRESHRSS_APP_URL=freshrss.example.com
+
+# Timezone y permisos
+TZ=America/Argentina/Buenos_Aires
+PUID=1000
+PGID=1000
+
+# Base de datos (opcional si usas SQLite, necesario para PostgreSQL)
+POSTGRES_USER=freshrss
+POSTGRES_PASSWORD=freshrss_db_password_change_me
+POSTGRES_DB=freshrss
